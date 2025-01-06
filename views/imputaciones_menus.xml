@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<menuitem
+    id="imputaciones_menu_root"
+    name="Imputaciones"
+    web_icon="orb_register_activity,static/orb_ra.png"
+    sequence="90"/>
+
+<menuitem
+    id="imputaciones_menu"
+    name="Imputaciones"
+    parent="imputaciones_menu_root"
+    sequence="5"/>
+
+<menuitem
+    id="imputaciones_menu_abierta"
+    name="Imputación Abierta"
+    action="action_imputaciones_imputacion_abierta"    
+    parent="imputaciones_menu"
+    sequence="10"/>
+
+<menuitem
+    id="imputaciones_menu_cerrada"
+    name="Imputación Cerradas"
+    action="action_imputaciones_imputacion_cerrada"    
+    parent="imputaciones_menu"
+    sequence="20"/>
+
+<menuitem
+    id="imputaciones_menu_imputada"
+    name="Imputación Imputada"
+    action="action_imputaciones_imputacion_imputada"    
+    parent="imputaciones_menu"
+    sequence="30"/>
+    
+
+</odoo>
+
+
+
+ 

@@ -1,0 +1,132 @@
+<odoo>
+  <data>
+   <record id="imputaciones_view_tree" model="ir.ui.view">
+    <field name="name">imputaciones.view.tree</field>
+    <field name="model">imputaciones</field>
+    <field name="arch" type="xml">
+      <tree string="Imputaciones">
+        <field name="name" string="Resumen" required="True"/>
+        <field name="ticket" string="Ticket"/>
+        <field name="partner_id" string="Partner" required="True"/>
+        <field name="case_id"/>
+        <field name="project_id" />
+        <field name="task_id" />
+        <field name="fecha_inicio" string ="Fecha Inicio"/>
+        <field name="fecha_final" string ="Fecha Fin"/>
+        <field name="tiempo" string="Tiempo"/>
+        <field name="factor" />
+        <field name="tiempo_realizado" string ="Tiempo Realizado"/>
+        <field name="tiempo_facturar" string ="Tiempo facturar"/>
+        <field name="descripcion" />
+        <field name="state" />
+      </tree>
+    </field>
+   </record>
+
+    <record id="imputaciones_view_form" model="ir.ui.view">
+    <field name="name">imputaciones.view.form</field>
+    <field name="model">imputaciones</field>
+    <field name="arch" type="xml">
+    <form string="Imputaciones">
+    <header>
+        <field name="state" widget="statusbar"/>
+        <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2','3')"/> 
+        <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
+        <button name="imputado" string="Imputado" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>            
+        <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state == '3'"/>
+    </header>
+    <sheet>
+        <group string="Resumen">
+            <field name="name" required="True" nolabel="1" colspan="2"/>
+        </group>
+        <group string="Datos">
+            <group>
+                <field name="partner_id" string="Partner"/> 
+            </group>
+            <group>
+                <field name="user_id" string="Usuario"/>  
+            </group>
+        </group>
+        <group string="Descripción">
+            <field name="descripcion" nolabel="1" colspan="2"/>
+        </group>
+        <group string="Caso / Proyecto">
+            <group>
+                <field name="ticket" string="Ticket"/> 
+                <field name="project_id" domain="[('partner_id','=',partner_id)]" required="True"/>
+            </group>
+            <group>
+                <field name="case_id" domain="[('partner_id','=',partner_id)]"/>
+                <field name="task_id" domain="[('project_id','=',project_id)]"/>
+            </group>
+        </group>
+        <group string="Fechas" col="3">
+            <group>
+                <field name="fecha_inicio" string="Fecha Inicio"/>
+            </group>
+            <group>
+                <field name="fecha_final" string="Fecha Fin"/>
+            </group>
+            <group>
+                <field name="tiempo" string="Tiempo utilizado" readonly="True"/>
+            </group>
+        </group>
+        <group string="Tiempos" col="4">
+            <group>
+                <field name="factor" string="Factor"/>
+            </group>
+            <group>
+                <field name="tiempo_realizado" string="Tiempo Realizado" readonly="True"/>
+            </group>
+            <group>
+                <field name="tiempo_manual" string="Tiempo Manual"/>
+            </group>
+            <group>
+                <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True"/>
+            </group>
+        </group>
+        
+    </sheet>
+    </form>
+    </field>
+   </record>
+
+  <record id="imputaciones_view_pivot" model="ir.ui.view">
+    <field name="name">imputaciones.view.pivot</field>
+    <field name="model">imputaciones</field>
+    <field name="arch" type="xml">
+      <pivot string="Imputaciones" disable_linking="true">
+        <field name="case_id" type="row"/>
+        <field name="fecha_final" interval="day" type="col" />
+        <field name="tiempo" type="measure" widget="float_time"/>        
+      </pivot>
+    </field>
+  </record>
+   
+<record id="action_imputaciones_imputacion_abierta" model="ir.actions.act_window">
+    <field name="name">Imputaciones abiertas</field>
+    <field name="res_model">imputaciones</field>    
+    <field name="view_mode">tree,form,pivot</field>
+    <field name="view_id" ref="imputaciones_view_tree"/>
+    <field name="domain">['|',('state','=','0'),('state','=','1')]</field>
+</record>
+
+<record id="action_imputaciones_imputacion_cerrada" model="ir.actions.act_window">
+    <field name="name">Imputaciones cerradas</field>
+    <field name="res_model">imputaciones</field>    
+    <field name="view_mode">tree,form,pivot</field>
+    <field name="view_id" ref="imputaciones_view_tree"/>
+    <field name="domain">[('state','=','2')]</field>
+</record>
+
+<record id="action_imputaciones_imputacion_imputada" model="ir.actions.act_window">
+    <field name="name">Imputaciones imputadas</field>
+    <field name="res_model">imputaciones</field>    
+    <field name="view_mode">tree,form,pivot</field>
+    <field name="view_id" ref="imputaciones_view_tree"/>
+    <field name="domain">[('state','=','3')]</field>
+</record>
+
+
+  </data>
+</odoo>
