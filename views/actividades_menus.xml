@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="actividades_menu"
+        name="Actividades"
+        parent="imputaciones_menu_root"
+        sequence="6"/>
+
+    <menuitem
+        id="actividades_menu_pendientes"
+        name="Actividades Pendientes"
+        action="action_actividades_pendientes"
+        parent="actividades_menu"    
+        sequence="61"/>
+
+    <menuitem
+        id="actividades_menu_finalizadas"
+        name="Actividades Finalizadas"
+        action="action_actividades_finalizadas"
+        parent="actividades_menu"    
+        sequence="62"/>
+</odoo>
+
+
+
+ 

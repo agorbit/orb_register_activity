@@ -21,9 +21,10 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/imputaciones_menus.xml',        
-        'views/templates.xml'
+        'views/imputaciones_views.xml',
+        'views/imputaciones_menus.xml',
+        'views/actividades_views.xml',  
+        'views/actividades_menus.xml'        
     ],
     # only loaded in demonstration mode
     'demo': [

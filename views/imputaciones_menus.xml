@@ -4,7 +4,7 @@
 <menuitem
     id="imputaciones_menu_root"
     name="Imputaciones"
-    web_icon="orb_register_activity,static/orb_ra.png"
+    web_icon="orb_register_activity,static/description/icon.png"
     sequence="90"/>
 
 <menuitem
