@@ -6,7 +6,7 @@
         """,
 
     'description': """
-        
+        Orbit registro actividades
     """,
 
     'author': "Alberto Garcia - Orbit",
