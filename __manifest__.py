@@ -6,7 +6,7 @@
         """,
 
     'description': """
-        Orbit registro actividades
+        Orbit registro actividades e imputaciones
     """,
 
     'author': "Alberto Garcia - Orbit",
