@@ -66,7 +66,7 @@
         <field name="res_model">actividades</field> 
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="actividades_view_tree"/>
-        <field name="domain">[('state','<','3')]</field>
+        <field name="domain">[('state','=','3')]</field>
     </record>
 
     <record id="action_actividades_finalizadas" model="ir.actions.act_window">
