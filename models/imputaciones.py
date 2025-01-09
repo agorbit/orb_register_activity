@@ -58,7 +58,7 @@ class Imputaciones (models.Model):
         self.fecha_final = datetime.today()
         FechaInicial = self.fecha_inicio
         FechaFinal = self.fecha_final
-        if (FechaInicial and FechaFinal) != "":
+        if FechaInicial != "" and FechaFinal != "":
             diferencia = FechaFinal - FechaInicial
             self.tiempo = diferencia.total_seconds()/3600
             self.tiempo_realizado = self.tiempo * self.factor
@@ -70,9 +70,9 @@ class Imputaciones (models.Model):
     
     #Cambios en campos
 
-    @api.onchange('factor','tiempo_manual')
-    def _on_change_factor(self):        
-        self.recalcular() 
+    # @api.onchange('factor','tiempo_manual')
+    # def _on_change_factor(self):        
+    #     self.recalcular() 
 
 
     @api.onchange('ticket')
@@ -88,6 +88,22 @@ class Imputaciones (models.Model):
         
     
     #Crear registro en ticket
+    
+    def registro_ticket(self):
+        resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
+        if resultado > 0:
+            casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])  
+            for caso in casos:
+                  
+                vals = {
+                    'ticket_id': self.case_id,
+                    'user_id': self.user_id,
+                    'project_id': caso.project_id,
+                    'unit_amount': self.tiempo_facturar 
+                }
+                
+                self.env(['account.analytic.line']).create(vals)
+        
 
 class Actividades (models.Model):
     _name = 'actividades'
