@@ -58,7 +58,7 @@ class Imputaciones (models.Model):
         self.fecha_final = datetime.today()
         FechaInicial = self.fecha_inicio
         FechaFinal = self.fecha_final
-        if str(FechaInicial) != "" and str(FechaFinal) != "":
+        if str(FechaInicial) != "False" and str(FechaFinal) != "False":
             diferencia = FechaFinal - FechaInicial
             self.tiempo = diferencia.total_seconds()/3600
             self.tiempo_realizado = self.tiempo * self.factor
