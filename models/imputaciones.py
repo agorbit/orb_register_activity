@@ -83,6 +83,7 @@ class Imputaciones (models.Model):
             casos = self.env['helpdesk.ticket'].search(['&',('id','=',int(self.ticket)),('partner_id','=',self.partner_id.id)])
             for caso in casos:
                 self.case_id = caso.id
+                self.project_id = caso.team_id.project_id
         else:
             self.case_id = ""
         
@@ -90,7 +91,7 @@ class Imputaciones (models.Model):
     
     #Crear registro en ticket
     
-    def registro_ticket(self):
+    def imputar(self):
         resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
         if resultado > 0:
             casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])  
@@ -99,7 +100,7 @@ class Imputaciones (models.Model):
                     'date':self.fecha_final,
                     'ticket_id': self.case_id,
                     'user_id': self.user_id,
-                    'project_id': caso.project_id,
+                    'project_id': self.project_id,
                     'unit_amount': self.tiempo_facturar 
                 }
                 

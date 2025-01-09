@@ -34,6 +34,7 @@
         <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
         <button name="imputado" string="Imputado" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>            
         <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state == '3'"/>
+        <button name="imputar" string="Imputar" type="object" class="oe_stat_button" invisible="state in ('0','1','2')"/>  
     </header>
     <sheet>
         <group string="Resumen">
