@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 
 class Imputaciones (models.Model):
@@ -92,17 +93,20 @@ class Imputaciones (models.Model):
     #Crear registro en ticket
     
     def imputar(self):
-        resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
+        resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
         if resultado > 0:
-            casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])  
+            casos = self.env['helpdesk.ticket'].search([('id','=',self.case_id.id)])  
             for caso in casos:                
-                vals = {
-                    'date':self.fecha_final,
-                    'ticket_id': self.case_id,
-                    'user_id': self.user_id,
-                    'project_id': self.project_id,
-                    'unit_amount': self.tiempo_facturar 
-                }
-                
-                self.env(['account.analytic.line']).create(vals)
+                timesheet = self.env['account.analytic.line'].create(
+                    {                       
+                            'date':self.fecha_final,
+                            'helpdesk_ticket_id': self.case_id.id,
+                            'user_id': self.user_id.id,
+                            'project_id': self.project_id.id,
+                            'unit_amount': self.tiempo_facturar,
+                            'amount':0.00,
+                            'name':self.descripcion,
+                    })
+                #raise ValidationError("tiempo facturar:" + str(self.tiempo_facturar))
+                #raise ValidationError("Se crea registro:" + self.descripcion + "-" + str(self.tiempo_facturar))
     

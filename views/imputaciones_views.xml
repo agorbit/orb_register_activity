@@ -69,7 +69,7 @@
                 <field name="fecha_final" string="Fecha Fin"/>
             </group>
             <group>
-                <field name="tiempo" string="Tiempo utilizado" readonly="True"/>
+                <field name="tiempo" string="Tiempo utilizado" readonly="True" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
             </group>
         </group>
         <group string="Tiempos" col="4">
@@ -77,13 +77,13 @@
                 <field name="factor" string="Factor"/>
             </group>
             <group>
-                <field name="tiempo_realizado" string="Tiempo Realizado" readonly="True"/>
+                <field name="tiempo_realizado" string="Tiempo Realizado" readonly="True" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
             </group>
             <group>
-                <field name="tiempo_manual" string="Tiempo Manual"/>
+                <field name="tiempo_manual" string="Tiempo Manual" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
             </group>
             <group>
-                <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True"/>
+                <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
             </group>
         </group>
         
