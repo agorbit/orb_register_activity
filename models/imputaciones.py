@@ -55,17 +55,18 @@ class Imputaciones (models.Model):
         self.state = '3'
     
     def recalcular(self):
-        self.fecha_final = datetime.today()
-        FechaInicial = self.fecha_inicio
-        FechaFinal = self.fecha_final
-        if str(FechaInicial) != "False" and str(FechaFinal) != "False":
-            diferencia = FechaFinal - FechaInicial
-            self.tiempo = diferencia.total_seconds()/3600
-            self.tiempo_realizado = self.tiempo * self.factor
-            if self.tiempo_manual != 0:
-                self.tiempo_facturar = self.tiempo_manual            
-            else:
-                self.tiempo_facturar = self.tiempo_realizado
+        if self.state != '0':
+            self.fecha_final = datetime.today()
+            FechaInicial = self.fecha_inicio
+            FechaFinal = self.fecha_final
+            if str(FechaInicial) != "False" and str(FechaFinal) != "False":
+                diferencia = FechaFinal - FechaInicial
+                self.tiempo = diferencia.total_seconds()/3600
+                self.tiempo_realizado = self.tiempo * self.factor
+                if self.tiempo_manual != 0:
+                    self.tiempo_facturar = self.tiempo_manual            
+                else:
+                    self.tiempo_facturar = self.tiempo_realizado
         
     
     #Cambios en campos
