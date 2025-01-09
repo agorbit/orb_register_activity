@@ -94,15 +94,26 @@ class Imputaciones (models.Model):
     
     def imputar(self):
         resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
-        if resultado > 0:
-            casos = self.env['helpdesk.ticket'].search([('id','=',self.case_id.id)])  
-            for caso in casos:                
+        if resultado > 0:  
+            timesheet = self.env['account.analytic.line'].create(
+                {                       
+                        'date':self.fecha_final,
+                        'helpdesk_ticket_id': self.case_id.id,
+                        'user_id': self.user_id.id,
+                        'project_id': self.project_id.id,
+                        'unit_amount': self.tiempo_facturar,
+                        'amount':0.00,
+                        'name':self.descripcion,
+                })
+        else:
+            resultado = self.env['project.task'].search_count(['&',('id','=',self.task_id.id),('project_id','=',self.project_id.id)])  
+            if resultado > 0:               
                 timesheet = self.env['account.analytic.line'].create(
                     {                       
-                            'date':self.fecha_final,
-                            'helpdesk_ticket_id': self.case_id.id,
+                            'date':self.fecha_final,                                
                             'user_id': self.user_id.id,
                             'project_id': self.project_id.id,
+                            'task_id':self.task_id.id,
                             'unit_amount': self.tiempo_facturar,
                             'amount':0.00,
                             'name':self.descripcion,
