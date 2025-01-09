@@ -58,13 +58,14 @@ class Imputaciones (models.Model):
         self.fecha_final = datetime.today()
         FechaInicial = self.fecha_inicio
         FechaFinal = self.fecha_final
-        diferencia = FechaFinal - FechaInicial
-        self.tiempo = diferencia.total_seconds()/3600
-        self.tiempo_realizado = self.tiempo * self.factor
-        if self.tiempo_manual != 0:
-            self.tiempo_facturar = self.tiempo_manual            
-        else:
-            self.tiempo_facturar = self.tiempo_realizado
+        if (FechaInicial and FechaFinal) != "":
+            diferencia = FechaFinal - FechaInicial
+            self.tiempo = diferencia.total_seconds()/3600
+            self.tiempo_realizado = self.tiempo * self.factor
+            if self.tiempo_manual != 0:
+                self.tiempo_facturar = self.tiempo_manual            
+            else:
+                self.tiempo_facturar = self.tiempo_realizado
         
     
     #Cambios en campos
