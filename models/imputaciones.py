@@ -32,10 +32,6 @@ class Imputaciones (models.Model):
     ],default='0' ,string='Estado')
 
 
-    #def create(self):
-    #    self.user_id = self.env.user
-    #    self.company_id = self.env.company
-               
     #Botones
 
     def enprogreso(self):
@@ -75,13 +71,7 @@ class Imputaciones (models.Model):
 
     @api.onchange('factor','tiempo_manual')
     def _on_change_factor(self):        
-        self.recalcular()
-        # res = {'warning': {
-        #     'title': ('Warning'),
-        #     'message': ('My warning message.')
-        #     }  
-        # }  
-        # return res    
+        self.recalcular() 
 
 
     @api.onchange('ticket')
