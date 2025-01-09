@@ -70,9 +70,9 @@ class Imputaciones (models.Model):
     
     #Cambios en campos
 
-    # @api.onchange('factor','tiempo_manual')
-    # def _on_change_factor(self):        
-    #     self.recalcular() 
+    @api.onchange('factor','tiempo_manual')
+    def _on_change_factor(self):        
+        self.recalcular() 
 
 
     @api.onchange('ticket')
@@ -93,9 +93,9 @@ class Imputaciones (models.Model):
         resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
         if resultado > 0:
             casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])  
-            for caso in casos:
-                  
+            for caso in casos:                
                 vals = {
+                    'date':self.fecha_final,
                     'ticket_id': self.case_id,
                     'user_id': self.user_id,
                     'project_id': caso.project_id,
