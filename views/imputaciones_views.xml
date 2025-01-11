@@ -5,19 +5,14 @@
     <field name="model">imputaciones</field>
     <field name="arch" type="xml">
       <tree string="Imputaciones">
-        <field name="name" string="Resumen" required="True"/>
+        <field name="name" string="Resumen" />
         <field name="ticket" string="Ticket"/>
-        <field name="partner_id" string="Partner" required="True"/>
+        <field name="partner_id" string="Partner"/>
         <field name="case_id"/>
         <field name="project_id" />
         <field name="task_id" />
         <field name="fecha_inicio" string ="Fecha Inicio"/>
-        <field name="fecha_final" string ="Fecha Fin"/>
-        <field name="tiempo" string="Tiempo"/>
-        <field name="factor" />
-        <field name="tiempo_realizado" string ="Tiempo Realizado"/>
-        <field name="tiempo_facturar" string ="Tiempo facturar"/>
-        <field name="descripcion" />
+        <field name="fecha_final" string ="Fecha Fin"/>         
         <field name="state" />
       </tree>
     </field>
@@ -33,8 +28,8 @@
         <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2','3')"/> 
         <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
         <button name="imputado" string="Imputado" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>            
-        <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state == '3'"/>
-        <button name="imputar" string="Imputar" type="object" class="oe_stat_button" invisible="state == '3'"/> 
+        <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>
+        <button name="imputar" string="Imputar" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/> 
     </header>
     <sheet>
         <group string="Resumen">
@@ -126,7 +121,7 @@
 </record>
 
 <record id="action_imputaciones_imputacion_cerrada" model="ir.actions.act_window">
-    <field name="name">Imputaciones cerradas</field>
+    <field name="name">Imputaciones finalizadas</field>
     <field name="res_model">imputaciones</field>    
     <field name="view_mode">tree,form,pivot</field>
     <field name="view_id" ref="imputaciones_view_tree"/>
