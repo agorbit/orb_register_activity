@@ -38,7 +38,7 @@
                 <field name="partner_id" string="Partner"/> 
             </group>
             <group>
-                <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','1567')]" required="True"/>
+                <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting'')]" required="True"/>
                 <field name="user_id" string="Usuario"/>  
             </group>
             <group string="Detalle">

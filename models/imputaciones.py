@@ -53,10 +53,10 @@ class Imputaciones (models.Model):
             self.tiempo_facturar = self.tiempo_realizado
 
     def imputado(self):
-        if self.case_id == "" and self.project_id=="":
+        if self.case_id == False and self.project_id == False
             raise ValidationError("Caso o proyecto debes estar rellenados")
         else:
-            if self.case_id == "" and self.project_id!="" and self.task_id == "":
+            if self.case_id == False and self.project_id!=False and self.task_id == False:
                 raise ValidationError("Si es una imputacion de proyecto proyecto y tarea debes estar rellenados")
             else:
                 self.state = '3'
