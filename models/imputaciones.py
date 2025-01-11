@@ -53,7 +53,13 @@ class Imputaciones (models.Model):
             self.tiempo_facturar = self.tiempo_realizado
 
     def imputado(self):
-        self.state = '3'
+        if self.case_id == "" and self.project_id=="":
+            raise ValidationError("Caso o proyecto debes estar rellenados")
+        else:
+            if self.case_id == "" and self.project_id!="" and self.task_id == "":
+                raise ValidationError("Si es una imputacion de proyecto proyecto y tarea debes estar rellenados")
+            else:
+                self.state = '3'
     
     def recalcular(self):
         if self.state != '0':
@@ -121,3 +127,9 @@ class Imputaciones (models.Model):
                 #raise ValidationError("tiempo facturar:" + str(self.tiempo_facturar))
                 #raise ValidationError("Se crea registro:" + self.descripcion + "-" + str(self.tiempo_facturar))
     
+    # def unir_imputaciones(self):
+    #     for record in self.records:
+    #         Resumen = Resumen + "-"  + record.name
+    #         Partner = record.partner_id
+    #         Caso = 
+            
