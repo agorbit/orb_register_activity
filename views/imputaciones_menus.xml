@@ -22,7 +22,7 @@
 
 <menuitem
     id="imputaciones_menu_cerrada"
-    name="Imputación Cerradas"
+    name="Imputación Finalizadas"
     action="action_imputaciones_imputacion_cerrada"    
     parent="imputaciones_menu"
     sequence="20"/>
