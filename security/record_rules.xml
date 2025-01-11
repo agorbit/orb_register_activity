@@ -4,7 +4,7 @@
 
         <record id="imputaciones_record_user_rule" model="ir.rule">
             <field name="name">Imputaciones de cada usuario</field>
-            <field name="model_id" ref="imputaciones"/>
+            <field name="model_id" ref="model_imputaciones"/>
             <field name="domain_force">[('user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_create" eval="1"/>
