@@ -85,11 +85,12 @@ class Imputaciones (models.Model):
 
     @api.onchange('ticket')
     def _on_change_ticket(self):
-        resultado = self.env['helpdesk.ticket'].search_count(['&',('id','=',int(self.ticket)),('partner_id','=',self.partner_id.id)])       
+        resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
         if resultado > 0:
-            casos = self.env['helpdesk.ticket'].search(['&',('id','=',int(self.ticket)),('partner_id','=',self.partner_id.id)])
+            casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])
             for caso in casos:
                 self.case_id = caso.id
+                self.partner_id = caso.partner_id
                 self.project_id = caso.team_id.project_id
         else:
             self.case_id = ""

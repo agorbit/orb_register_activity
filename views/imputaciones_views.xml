@@ -40,20 +40,14 @@
         <group string="Resumen">
             <group>
                 <field name="ticket" string="Ticket"/> 
-            </group>
-            <group>
-                <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','1567')]" required="True"/>
-            </group>
-            <group string="Detalle">
-                <field name="name" required="True" nolabel="1" colspan="2"/>
-            </group>
-        </group>
-        <group string="Datos">
-            <group>
                 <field name="partner_id" string="Partner"/> 
             </group>
             <group>
+                <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','1567')]" required="True"/>
                 <field name="user_id" string="Usuario"/>  
+            </group>
+            <group string="Detalle">
+                <field name="name" required="True" nolabel="1" colspan="2"/>
             </group>
         </group>
         <group string="Descripción">
@@ -102,9 +96,21 @@
     <field name="name">imputaciones.view.pivot</field>
     <field name="model">imputaciones</field>
     <field name="arch" type="xml">
-      <pivot string="Imputaciones" disable_linking="true">
-        <field name="project_id" type="row"/>
+      <pivot string="Imputaciones" disable_linking="true">        
         <field name="case_id" type="row"/>
+        <field name="fecha_final" interval="day" type="col" />
+        <field name="tiempo" type="measure" widget="float_time"/>        
+      </pivot>
+    </field>
+  </record>
+
+   <record id="imputaciones_proyecto_view_pivot" model="ir.ui.view">
+    <field name="name">imputaciones.proyecto.view.pivot</field>
+    <field name="model">imputaciones</field>
+    <field name="arch" type="xml">
+      <pivot string="Imputaciones proyectos" disable_linking="true">
+        <field name="project_id" type="row"/>
+        <field name="task_id" type="row"/>
         <field name="fecha_final" interval="day" type="col" />
         <field name="tiempo" type="measure" widget="float_time"/>        
       </pivot>
