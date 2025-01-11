@@ -31,6 +31,7 @@ class Imputaciones (models.Model):
         ('2', 'Finalizado'),
         ('3', 'Imputado')
     ],default='0' ,string='Estado')
+    account_analytic_line_id = fields.Many2one('account.analytic.line',string="Imputación analítica")
 
 
     #Botones
@@ -53,11 +54,11 @@ class Imputaciones (models.Model):
             self.tiempo_facturar = self.tiempo_realizado
 
     def imputado(self):
-        if str(self.case_id) == "False" and str(self.project_id) == "False":
-            raise ValidationError("Caso o proyecto debes estar rellenados")
+        if self.case_id.id == False and self.project_id.id == False:
+            raise ValidationError("Caso o proyecto deben estar rellenados")
         else:
-            if str(self.case_id) == "False" and str(self.project_id) != False and str(self.task_id) == False:
-                raise ValidationError("Si es una imputacion de proyecto proyecto y tarea debes estar rellenados")
+            if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
+                raise ValidationError("Si es una imputación de proyecto, proyecto y tarea debes estar rellenados")
             else:
                 self.state = '3'
     
@@ -83,54 +84,63 @@ class Imputaciones (models.Model):
         self.recalcular() 
 
 
+    def check_int(self,s):
+        try: 
+            int(s)
+        except ValueError:
+            return False
+        else:
+            return True
+        
     @api.onchange('ticket')
     def _on_change_ticket(self):
-        resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
-        if resultado > 0:
-            casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])
-            for caso in casos:
-                self.case_id = caso.id
-                self.partner_id = caso.partner_id
-                self.project_id = caso.team_id.project_id
-        else:
-            self.case_id = ""
+        if self.check_int(self.ticket):
+            resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
+            if resultado > 0:
+                casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])
+                for caso in casos:
+                    self.case_id = caso.id
+                    self.partner_id = caso.partner_id
+                    self.project_id = caso.team_id.project_id
+            else:
+                self.case_id = ""
         
         
     
     #Crear registro en ticket
     
     def imputar(self):
-        resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
-        if resultado > 0:  
-            timesheet = self.env['account.analytic.line'].create(
-                {                       
-                        'date':self.fecha_final,
-                        'helpdesk_ticket_id': self.case_id.id,
-                        'user_id': self.user_id.id,
-                        'project_id': self.project_id.id,
-                        'unit_amount': self.tiempo_facturar,
-                        'amount':0.00,
-                        'name':self.descripcion,
-                })
-        else:
-            resultado = self.env['project.task'].search_count(['&',('id','=',self.task_id.id),('project_id','=',self.project_id.id)])  
-            if resultado > 0:               
+        resultado = self.env['account.analytic.line'].search_count([('id','=',self.account_analytic_line_id.id)]) 
+        if resultado == 0:
+            resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
+            if resultado > 0:  
                 timesheet = self.env['account.analytic.line'].create(
                     {                       
-                            'date':self.fecha_final,                                
+                            'date':self.fecha_final,
+                            'helpdesk_ticket_id': self.case_id.id,
                             'user_id': self.user_id.id,
                             'project_id': self.project_id.id,
-                            'task_id':self.task_id.id,
                             'unit_amount': self.tiempo_facturar,
                             'amount':0.00,
                             'name':self.descripcion,
                     })
-                #raise ValidationError("tiempo facturar:" + str(self.tiempo_facturar))
-                #raise ValidationError("Se crea registro:" + self.descripcion + "-" + str(self.tiempo_facturar))
-    
-    # def unir_imputaciones(self):
-    #     for record in self.records:
-    #         Resumen = Resumen + "-"  + record.name
-    #         Partner = record.partner_id
-    #         Caso = 
+                self.state = '3'
+                self.account_analytic_line_id = timesheet.id
+            else:
+                resultado = self.env['project.task'].search_count(['&',('id','=',self.task_id.id),('project_id','=',self.project_id.id)])  
+                if resultado > 0:               
+                    timesheet = self.env['account.analytic.line'].create(
+                        {                       
+                                'date':self.fecha_final,                                
+                                'user_id': self.user_id.id,
+                                'project_id': self.project_id.id,
+                                'task_id':self.task_id.id,
+                                'unit_amount': self.tiempo_facturar,
+                                'amount':0.00,
+                                'name':self.descripcion,
+                        })
+                    self.state = '3'
+                    self.account_analytic_line_id = timesheet.id
+        else:
+            raise ValidationError("Ya esta imputado")
             

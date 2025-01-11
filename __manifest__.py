@@ -21,6 +21,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'security/record_rules.xml',
         'views/imputaciones_views.xml',
         'views/imputaciones_menus.xml',
         'views/actividades_views.xml',  

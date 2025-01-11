@@ -81,7 +81,9 @@
                 <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True" widget="timesheet_uom"/>
             </group>
         </group>
-        
+        <group>
+            <field name="account_analytic_line_id"/>
+        </group>
     </sheet>
     </form>
     </field>
