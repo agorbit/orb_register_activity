@@ -144,3 +144,10 @@ class Imputaciones (models.Model):
         else:
             raise ValidationError("Ya esta imputado")
             
+    def unir_imputaciones(self):
+        for record in self:
+            Registros = Registros + "," record.id
+            Descripcion = Descripcion + " " + record.descripcion
+            raise ValidationError (Descripcion)
+        
+    

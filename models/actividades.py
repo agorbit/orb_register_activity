@@ -34,7 +34,7 @@ class Actividades (models.Model):
         
 
     def finalizar(self):
-        self.state = '2'       
+        self.state = '3'       
         
 
     def imputado(self):

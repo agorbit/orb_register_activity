@@ -27,8 +27,8 @@
                 <header>
                     <field name="state" widget="statusbar"/>
                     <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
-                    <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
-                    <button name="externo" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/>                    
+                    <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','3')"/>
+                    <button name="externo" string="Externo" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/>                    
                 </header>
                 <sheet>
                     <group string="Datos Principales">
@@ -66,12 +66,12 @@
         </field>
     </record>
 
-    <record id="action_actividades_pendientes" model="ir.actions.act_window">
+     <record id="action_actividades_pendientes" model="ir.actions.act_window">
         <field name="name">Actividades Pendientes</field>
         <field name="res_model">actividades</field> 
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="actividades_view_tree"/>
-        <field name="domain">[('state','=','3')]</field>
+        <field name="domain">['|','|',('state','=','0'),('state','=','1'),('state','=','2')]</field>
     </record>
 
     <record id="action_actividades_finalizadas" model="ir.actions.act_window">
