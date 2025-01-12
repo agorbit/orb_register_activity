@@ -25,39 +25,42 @@
         <field name="arch" type="xml">
             <form string="Actividades Pendientes">
                 <header>
-                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                    <field name="state" widget="statusbar"/>
                     <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
                     <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
+                    <button name="externo" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
                     <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>
                 </header>
                 <sheet>
-                    <group string="Resumen" >
-                            <field name="name" nolabel ="1" required="True" colspan="2"/>
-                    </group>
-                    <group string="Datos">
+                    <group string="Datos Principales">
                         <group>
-                            <field name="partner_id" string="Partner" required="True"/>
-                        </group>
-                        <group>
-                            <field name="fecha_vencimiento" string="Fecha vencimiento"/>
-                        </group>
-                        <group>
-                            <field name="cliente"/>
-                        </group>
-                    </group>
-                    
-                    <group string="Relaciones">
-                        <group>
-                            <field name="ticket" string="Ticket" colspan="2"/>
-                            <field name="case_id" domain="[('partner_id','=',partner_id)]"/>
+                            <field name="ticket" string="Ticket"/> 
+                            <field name="partner_id" string="Partner"/> 
                         </group>
                         <group>
                             <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting')]" required="True"/>
-                            <field name="task_id" domain="[('project_id','=',project_id)]"/>
+                            <field name="user_id" string="Usuario"/>  
+                        </group>
+                        <group string="Resumen">
+                            <field name="name" required="True" nolabel="1" colspan="4"/>
+                        </group>
+                        <group>
+                            <field name="cliente" string="Tarea del cliente"/>
                         </group>
                     </group>
                     <group string="Descripción">
                         <field name="descripcion" nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Caso / Proyecto">
+                        <group>
+                            <field name="case_id" domain="[('partner_id','=',partner_id)]"/>
+                        </group>
+                        <group>
+                            <field name="task_id" domain="[('project_id','=',project_id)]"/>
+                        </group>
+                        <group>
+                            <field name="fecha_vencimiento" string="Fecha Vencimiento"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

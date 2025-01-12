@@ -23,7 +23,8 @@ class Actividades (models.Model):
         ('0', 'Borrador'),
         ('1', 'Pendiente'),
         ('2', 'En curso'),
-        ('3', 'Finalizado')
+        ('3', 'Finalizado'),
+        ('4', 'Externo')
     ],default='0' ,string='Estado')
     
     #Botones

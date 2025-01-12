@@ -25,14 +25,14 @@
     <form string="Imputaciones">
     <header>
         <field name="state" widget="statusbar"/>
-        <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
+        <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1')"/> 
         <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
         <button name="imputado" string="Imputado" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>            
         <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>
         <button name="imputar" string="Imputar" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/> 
     </header>
     <sheet>
-        <group string="Resumen">
+        <group string="Datos Principales">
             <group>
                 <field name="ticket" string="Ticket"/> 
                 <field name="partner_id" string="Partner"/> 
@@ -41,7 +41,7 @@
                 <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting')]" required="True"/>
                 <field name="user_id" string="Usuario"/>  
             </group>
-            <group string="Detalle">
+            <group string="Resumen">
                 <field name="name" required="True" nolabel="1" colspan="2"/>
             </group>
         </group>
@@ -81,7 +81,7 @@
                 <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True" widget="timesheet_uom"/>
             </group>
         </group>
-        <group>
+        <group col="4">
             <field name="account_analytic_line_id"/>
         </group>
     </sheet>
@@ -97,8 +97,10 @@
              <field name="partner_id"/>
              <field name="case_id"/>
              <group expand="0" string="Group By">
-               <filter string="Project" name="project_id" context="{'group_by': project_id}"/>
-               <filter string="Caso" name="case_id" context="{'group_by': case_id}"/>
+               <filter string="Proyecto" name="project_id" context="{'group_by': 'project_id'}"/>
+               <filter string="Tarea" name="task_id" context="{'group_by': 'task_id'}"/>
+               <filter string="Caso" name="case_id" context="{'group_by': 'case_id'}"/>
+               <filter string="Día imputación" name="fecha_final" context="{'group_by': 'fecha_final:day'}"/>
             </group>
         </search>
     </field>
