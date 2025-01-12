@@ -68,6 +68,9 @@ class Actividades (models.Model):
                     self.tiempo_facturar = self.tiempo_manual            
                 else:
                     self.tiempo_facturar = self.tiempo_realizado
+                    
+    def externo(self):
+        self.state = '4'
         
     
     #Cambios en campos
