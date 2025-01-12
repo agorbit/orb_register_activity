@@ -28,8 +28,7 @@
                     <field name="state" widget="statusbar"/>
                     <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
                     <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
-                    <button name="externo" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
-                    <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>
+                    <button name="externo" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/>                    
                 </header>
                 <sheet>
                     <group string="Datos Principales">

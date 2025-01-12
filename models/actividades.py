@@ -31,20 +31,11 @@ class Actividades (models.Model):
 
     def enprogreso(self):
         self.state = '1'
-        self.fecha_inicio = datetime.today()
+        
 
     def finalizar(self):
-        self.state = '2'        
-        self.fecha_final = datetime.today()
-        FechaInicial = self.fecha_inicio
-        FechaFinal = self.fecha_final
-        diferencia = FechaFinal - FechaInicial
-        self.tiempo = diferencia.total_seconds()/3600
-        self.tiempo_realizado = self.tiempo * self.factor
-        if self.tiempo_manual != 0:
-            self.tiempo_facturar = self.tiempo_manual            
-        else:
-            self.tiempo_facturar = self.tiempo_realizado
+        self.state = '2'       
+        
 
     def imputado(self):
         if self.case_id.id == False and self.project_id.id == False:
@@ -54,21 +45,7 @@ class Actividades (models.Model):
                 raise ValidationError("Si es una imputación de proyecto, proyecto y tarea debes estar rellenados")
             else:
                 self.state = '3'
-    
-    def recalcular(self):
-        if self.state != '0':
-            self.fecha_final = datetime.today()
-            FechaInicial = self.fecha_inicio
-            FechaFinal = self.fecha_final
-            if str(FechaInicial) != "False" and str(FechaFinal) != "False":
-                diferencia = FechaFinal - FechaInicial
-                self.tiempo = diferencia.total_seconds()/3600
-                self.tiempo_realizado = self.tiempo * self.factor
-                if self.tiempo_manual != 0:
-                    self.tiempo_facturar = self.tiempo_manual            
-                else:
-                    self.tiempo_facturar = self.tiempo_realizado
-                    
+                  
     def externo(self):
         self.state = '4'
         
