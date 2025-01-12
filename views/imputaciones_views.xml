@@ -5,14 +5,14 @@
     <field name="model">imputaciones</field>
     <field name="arch" type="xml">
       <tree string="Imputaciones">
-        <field name="name" string="Resumen" />
-        <field name="ticket" string="Ticket"/>
+        <field name="name" string="Resumen" />        
         <field name="partner_id" string="Partner"/>
         <field name="case_id"/>
         <field name="project_id" />
         <field name="task_id" />
         <field name="fecha_inicio" string ="Fecha Inicio"/>
-        <field name="fecha_final" string ="Fecha Fin"/>         
+        <field name="fecha_final" string ="Fecha Fin"/>
+        <field name="tiempo_facturar" string="Tiempo Facturar"/>       
         <field name="state" />
       </tree>
     </field>
@@ -26,16 +26,16 @@
     <header>
         <field name="state" widget="statusbar"/>
         <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1')"/> 
-        <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/> 
-        <button name="imputado" string="Imputado" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>            
+        <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/>                   
         <button name="recalcular" string="Recalcular" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/>
+        <button name="imputado" string="Imputado" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/> 
         <button name="imputar" string="Imputar" type="object" class="oe_stat_button" invisible="state in ('0','1','3')"/> 
     </header>
     <sheet>
         <group string="Datos Principales">
             <group>
                 <field name="ticket" string="Ticket"/> 
-                <field name="partner_id" string="Partner"/> 
+                <field name="partner_id" string="Partner" required="True"/> 
             </group>
             <group>
                 <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting')]" required="True"/>
@@ -162,7 +162,7 @@
     <field name="model_id" ref="model_imputaciones"/>
     <field name="binding_model_id" ref="model_imputaciones"/>
     <field name="state">code</field>
-    <field name="code">unir_imputaciones()</field>
+    <field name="code">records.unir_imputaciones()</field>
 </record>
 
   </data>

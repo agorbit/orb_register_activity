@@ -32,6 +32,16 @@ class Imputaciones (models.Model):
         ('3', 'Imputado')
     ],default='0' ,string='Estado')
     account_analytic_line_id = fields.Many2one('account.analytic.line',string="Imputación analítica")
+    where = fields.Char(compute='_compute_where', string='where')
+    
+    @api.depends('partner_id','project_id')
+    def _compute_where(self):
+        if self.partner_id.id != False:
+            where = "('partner_id','=','" + str(self.partner_id.id) + ")"
+            if self.project_id.id != False:
+                where = "'&'," + where + "('project_id','=','" + str(self.project_id.id) + ")"                
+        
+        where = "[" + where + "]"
 
 
     #Botones
@@ -145,9 +155,12 @@ class Imputaciones (models.Model):
             raise ValidationError("Ya esta imputado")
             
     def unir_imputaciones(self):
-        for record in self:
-            Registros = Registros + "," record.id
-            Descripcion = Descripcion + " " + record.descripcion
+        for record in self: 
+            FechaInicio = record.fecha_inicio
+            FechaFin = record.fecha_fin
+            TiempoUtilizado = TiempoUtilizado + record.tiempo_utilizado
+            
+            Descripcion = Descripcion + " " +  record.descripcion
             raise ValidationError (Descripcion)
         
     

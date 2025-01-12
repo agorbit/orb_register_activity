@@ -13,7 +13,7 @@
     'website': "",
 
     'category': 'Uncategorized',
-    'version': '0.5',
+    'version': '0.6',
 
     # any module necessary for this one to work correctly
     'depends': ['base','helpdesk','project'],
