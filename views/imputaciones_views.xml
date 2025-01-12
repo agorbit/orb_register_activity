@@ -89,6 +89,21 @@
     </field>
    </record>
 
+   <record id="imputaciones_view_search" model="ir.ui.view">
+    <field name="name">imputaciones.search.view</field>
+    <field name="model">imputaciones</field>
+    <field name="arch" type="xml">
+        <search>
+             <field name="partner_id"/>
+             <field name="case_id"/>
+             <group expand="0" string="Group By">
+               <filter string="Project" name="project_id" context="{'group_by': project_id}"/>
+               <filter string="Caso" name="case_id" context="{'group_by': case_id}"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
   <record id="imputaciones_view_pivot" model="ir.ui.view">
     <field name="name">imputaciones.view.pivot</field>
     <field name="model">imputaciones</field>
