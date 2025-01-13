@@ -7,6 +7,7 @@ from datetime import datetime
 class Actividades (models.Model):
     _name = 'actividades'
     _description='Actividades'
+    _inherit = 'mail.thread'
 
     name = fields.Char('name')
     company_id = fields.Many2one('res.company',string='Company', store=True, readonly=True,default=lambda self: self.env.company)

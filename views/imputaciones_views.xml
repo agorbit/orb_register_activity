@@ -85,6 +85,10 @@
             <field name="account_analytic_line_id"/>
         </group>
     </sheet>
+    <div class="oe_chatter">
+        <field name="message_follower_ids" widget="mail_followers"/>
+        <field name="message_ids" widget="mail_thread"/>
+    </div>
     </form>
     </field>
    </record>
@@ -111,25 +115,12 @@
     <field name="model">imputaciones</field>
     <field name="arch" type="xml">
       <pivot string="Imputaciones" disable_linking="true">        
-        <field name="case_id" type="row"/>
-        <field name="fecha_final" interval="day" type="col" />
-        <field name="tiempo" type="measure" widget="float_time"/>        
-      </pivot>
-    </field>
-  </record>
-
-   <record id="imputaciones_proyecto_view_pivot" model="ir.ui.view">
-    <field name="name">imputaciones.proyecto.view.pivot</field>
-    <field name="model">imputaciones</field>
-    <field name="arch" type="xml">
-      <pivot string="Imputaciones proyectos" disable_linking="true">
         <field name="project_id" type="row"/>
-        <field name="task_id" type="row"/>
         <field name="fecha_final" interval="day" type="col" />
         <field name="tiempo" type="measure" widget="float_time"/>        
       </pivot>
     </field>
-  </record>
+  </record>   
    
 <record id="action_imputaciones_imputacion_abierta" model="ir.actions.act_window">
     <field name="name">Imputaciones abiertas</field>
