@@ -91,8 +91,12 @@ class Imputaciones (models.Model):
     
     #Cambios en campos
 
-    @api.onchange('factor','tiempo_manual')
+    @api.onchange('factor')
     def _on_change_factor(self):        
+        self.recalcular() 
+
+    @api.onchange('tiempo_manual')
+    def _on_change_tiempo_manual(self):        
         self.recalcular() 
 
 
