@@ -117,7 +117,8 @@ class Imputaciones (models.Model):
                 for caso in casos:
                     self.case_id = caso.id
                     self.partner_id = caso.partner_id
-                    self.project_id = caso.team_id.project_id
+                    if caso.team_id.use_helpdesk_timesheet == True:                        
+                        self.project_id = caso.team_id.project_id
             else:
                 self.case_id = ""
         

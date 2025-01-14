@@ -4,16 +4,15 @@
         <field name="name">actividades.view.tree</field>
         <field name="model">actividades</field>
         <field name="arch" type="xml">
-            <tree string="Actividades">
+            <tree string="Actividades" decoration-info="dias_vencido &lt; 0.00" decoration-danger="dias_vencido &gt; 0.00" >
                 <field name="name" string="Resumen" required="True"/>
                 <field name="ticket" string="Ticket"/>
                 <field name="partner_id" string="Partner" required="True"/>
                 <field name="case_id"/>
                 <field name="project_id" />
                 <field name="task_id" />
-                <field name="cliente" />
-                <field name="descripcion" />
-                <field name="fecha_vencimiento" />
+                <field name="cliente" string="Tarea del cliente"/>                
+                <field name="fecha_vencimiento" string="Fecha Vencimiento" />
                 <field name="state" />
             </tree>
         </field>
@@ -27,8 +26,8 @@
                 <header>
                     <field name="state" widget="statusbar"/>
                     <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
-                    <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','3')"/>
-                    <button name="externo" string="Externo" type="object" class="oe_stat_button" invisible="state in ('0','2','3')"/>                    
+                    <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','4')"/>
+                    <button name="externo" string="Externo" type="object" class="oe_stat_button" invisible="state in ('0','2','4')"/>                    
                 </header>
                 <sheet>
                     <group string="Datos Principales">

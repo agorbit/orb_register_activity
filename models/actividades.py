@@ -27,6 +27,15 @@ class Actividades (models.Model):
         ('3', 'Finalizado'),
         ('4', 'Externo')
     ],default='0' ,string='Estado')
+    dias_vencido = fields.Float(compute='_compute_dias_vencido', string='Días vencido', store="True")
+    
+    @api.depends('fecha_vencimiento')
+    def _compute_dias_vencido(self):
+        FechaAhora = date.today()
+        FechaFinal = self.fecha_vencimiento        
+        diferencia = FechaAhora -  FechaFinal
+        self.dias_vencido = diferencia.total_seconds()/86400
+
     
     #Botones
 
