@@ -13,6 +13,7 @@
                 <field name="task_id" />
                 <field name="cliente" string="Tarea del cliente"/>                
                 <field name="fecha_vencimiento" string="Fecha Vencimiento" />
+                <field name="dias_vencido" />
                 <field name="state" />
             </tree>
         </field>
