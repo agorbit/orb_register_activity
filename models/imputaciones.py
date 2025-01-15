@@ -128,7 +128,7 @@ class Imputaciones (models.Model):
     
     def imputar(self):
         for record in self:
-            if self.state == 2:
+            if self.state == '2':
                 resultado = self.env['account.analytic.line'].search_count([('id','=',self.account_analytic_line_id.id)]) 
                 if resultado == 0:
                     resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
