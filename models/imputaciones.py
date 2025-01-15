@@ -127,39 +127,41 @@ class Imputaciones (models.Model):
     #Crear registro en ticket
     
     def imputar(self):
-        resultado = self.env['account.analytic.line'].search_count([('id','=',self.account_analytic_line_id.id)]) 
-        if resultado == 0:
-            resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
-            if resultado > 0:  
-                timesheet = self.env['account.analytic.line'].create(
-                    {                       
-                            'date':self.fecha_final,
-                            'helpdesk_ticket_id': self.case_id.id,
-                            'user_id': self.user_id.id,
-                            'project_id': self.project_id.id,
-                            'unit_amount': self.tiempo_facturar,
-                            'amount':0.00,
-                            'name':self.descripcion,
-                    })
-                self.state = '3'
-                self.account_analytic_line_id = timesheet.id
-            else:
-                resultado = self.env['project.task'].search_count(['&',('id','=',self.task_id.id),('project_id','=',self.project_id.id)])  
-                if resultado > 0:               
-                    timesheet = self.env['account.analytic.line'].create(
-                        {                       
-                                'date':self.fecha_final,                                
-                                'user_id': self.user_id.id,
-                                'project_id': self.project_id.id,
-                                'task_id':self.task_id.id,
-                                'unit_amount': self.tiempo_facturar,
-                                'amount':0.00,
-                                'name':self.descripcion,
-                        })
-                    self.state = '3'
-                    self.account_analytic_line_id = timesheet.id
-        else:
-            raise ValidationError("Ya esta imputado")
+        for record in self:
+            if self.state == 2:
+                resultado = self.env['account.analytic.line'].search_count([('id','=',self.account_analytic_line_id.id)]) 
+                if resultado == 0:
+                    resultado = self.env['helpdesk.ticket'].search_count([('id','=',self.case_id.id)])       
+                    if resultado > 0:  
+                        timesheet = self.env['account.analytic.line'].create(
+                            {                       
+                                    'date':self.fecha_final,
+                                    'helpdesk_ticket_id': self.case_id.id,
+                                    'user_id': self.user_id.id,
+                                    'project_id': self.project_id.id,
+                                    'unit_amount': self.tiempo_facturar,
+                                    'amount':0.00,
+                                    'name':self.descripcion,
+                            })
+                        self.state = '3'
+                        self.account_analytic_line_id = timesheet.id
+                    else:
+                        resultado = self.env['project.task'].search_count(['&',('id','=',self.task_id.id),('project_id','=',self.project_id.id)])  
+                        if resultado > 0:               
+                            timesheet = self.env['account.analytic.line'].create(
+                                {                       
+                                        'date':self.fecha_final,                                
+                                        'user_id': self.user_id.id,
+                                        'project_id': self.project_id.id,
+                                        'task_id':self.task_id.id,
+                                        'unit_amount': self.tiempo_facturar,
+                                        'amount':0.00,
+                                        'name':self.descripcion,
+                                })
+                            self.state = '3'
+                            self.account_analytic_line_id = timesheet.id
+                else:
+                    raise ValidationError("Ya esta imputado")
             
     def unir_imputaciones(self):
         for record in self: 

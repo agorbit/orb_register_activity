@@ -50,7 +50,7 @@
         </group>
         <group string="Caso / Proyecto">
             <group>
-                <field name="case_id" domain="[('partner_id','=',partner_id)]"/>
+                <field name="case_id" domain="['&amp;',('partner_id','=',partner_id),('stage_id','!=','Solved')]"/>
             </group>
             <group>
                 <field name="task_id" domain="[('project_id','=',project_id)]"/>
@@ -154,6 +154,15 @@
     <field name="binding_model_id" ref="model_imputaciones"/>
     <field name="state">code</field>
     <field name="code">records.unir_imputaciones()</field>
+</record>
+
+<record id="imputaciones_imputar_action_server" model="ir.actions.server">
+    <field name="name">Imputar imputaciones</field>
+    <field name="type">ir.actions.server</field>
+    <field name="model_id" ref="model_imputaciones"/>
+    <field name="binding_model_id" ref="model_imputaciones"/>
+    <field name="state">code</field>
+    <field name="code">records.imputar()</field>
 </record>
 
   </data>
