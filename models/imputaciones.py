@@ -34,7 +34,7 @@ class Imputaciones (models.Model):
         ('3', 'Imputado')
     ],default='0' ,string='Estado')
     account_analytic_line_id = fields.Many2one('account.analytic.line',string="Imputación analítica")
-    agrupacion = fields.Boolean('agrupacion',default=False,string='Agrupacion')
+    agrupacion = fields.Boolean('agrupacion',default=False)
     imputacion_id = fields.Many2one('imputaciones', string='Imputacion')
     where = fields.Char(compute='_compute_where', string='where')
     
