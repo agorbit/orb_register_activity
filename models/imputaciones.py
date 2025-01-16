@@ -34,6 +34,8 @@ class Imputaciones (models.Model):
         ('3', 'Imputado')
     ],default='0' ,string='Estado')
     account_analytic_line_id = fields.Many2one('account.analytic.line',string="Imputación analítica")
+    agrupacion = fields.Boolean('agrupacion',string="Agrupacion")
+    imputacion_id = fields.Many2one('imputaciones', string='Imputacion ')
     where = fields.Char(compute='_compute_where', string='where')
     
     @api.depends('partner_id','project_id')
@@ -166,10 +168,24 @@ class Imputaciones (models.Model):
     def unir_imputaciones(self):
         for record in self: 
             FechaInicio = record.fecha_inicio
-            FechaFin = record.fecha_fin
-            TiempoUtilizado = TiempoUtilizado + record.tiempo_utilizado
-            
+            FechaFin = record.fecha_final
+            TiempoRealizado = TiempoRealizado + record.tiempo_realizado
+            TiempoFacturable = TiempoFacturable + record.tiempo_facturar
             Descripcion = Descripcion + " " +  record.descripcion
-            raise ValidationError (Descripcion)
+        
+        NewCase = self.env['imputaciones'].create(
+            {
+                'fecha_inicio':FechaInicio,
+                'fecha_final':FechaFin,
+                'tiempo_utilizado':TiempoRealizado,
+                'name':'Agrupacion',
+                'descripcion':Descripcion,
+            })
+        agrupacion_nueva = NewCase.id    
+        
+        for record in self:
+            self.agrupacion = True
+            self.imputacion_id = NewCase.id 
+        
         
     
