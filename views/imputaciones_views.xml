@@ -34,34 +34,34 @@
     <sheet>
         <group string="Datos Principales">
             <group>
-                <field name="ticket" string="Ticket"/> 
-                <field name="partner_id" string="Partner" required="True"/> 
+                <field name="ticket" string="Ticket" readonly="state in ('2','3')"/> 
+                <field name="partner_id" string="Partner" required="True" readonly="state in ('2','3')"/> 
             </group>
             <group>
-                <field name="project_id" domain="['|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting')]" required="True"/>
-                <field name="user_id" string="Usuario"/>  
+                <field name="project_id" domain="['|','|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting'),('partner_id','=',False)]" readonly="state in ('2','3')" />
+                <field name="user_id" string="Usuario" readonly="state in ('2','3')"/>  
             </group>
             <group string="Resumen">
-                <field name="name" required="True" nolabel="1" colspan="2"/>
+                <field name="name" required="True" nolabel="1" colspan="2" readonly="state in ('2','3')"/>
             </group>
         </group>
         <group string="Descripción">
-            <field name="descripcion" nolabel="1" colspan="2"/>
+            <field name="descripcion" nolabel="1" colspan="2" readonly="state in ('2','3')"/>
         </group>
         <group string="Caso / Proyecto">
             <group>
-                <field name="case_id" domain="['&amp;',('partner_id','=',partner_id),('stage_id','!=','Solved')]"/>
+                <field name="case_id" domain="['&amp;',('partner_id','=',partner_id),('stage_id','!=','Solved')]" readonly="state in ('2','3')"/>
             </group>
             <group>
-                <field name="task_id" domain="[('project_id','=',project_id)]"/>
+                <field name="task_id" domain="[('project_id','=',project_id)]" readonly="state in ('2','3')"/>
             </group>
         </group>
         <group string="Fechas" col="3">
             <group>
-                <field name="fecha_inicio" string="Fecha Inicio"/>
+                <field name="fecha_inicio" string="Fecha Inicio" readonly="state in ('2','3')"/>
             </group>
             <group>
-                <field name="fecha_final" string="Fecha Fin"/>
+                <field name="fecha_final" string="Fecha Fin" readonly="state in ('2','3')"/>
             </group>
             <group>
                 <field name="tiempo" string="Tiempo utilizado" readonly="True" widget="timesheet_uom"/>
@@ -69,20 +69,28 @@
         </group>
         <group string="Tiempos" col="4">
             <group>
-                <field name="factor" string="Factor"/>
+                <field name="factor" string="Factor" readonly="state in ('2','3')"/>
             </group>
             <group>
                 <field name="tiempo_realizado" string="Tiempo Realizado" readonly="True" widget="timesheet_uom"/>
             </group>
             <group>
-                <field name="tiempo_manual" string="Tiempo Manual" widget="timesheet_uom"/>
+                <field name="tiempo_manual" string="Tiempo Manual" widget="timesheet_uom" readonly="state in ('2','3')"/>
             </group>
             <group>
                 <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True" widget="timesheet_uom"/>
             </group>
         </group>
         <group col="4">
-            <field name="account_analytic_line_id"/>
+            <group>
+                <field name="account_analytic_line_id" readonly="true" colspan="2"/>
+            </group>
+            <group>
+                <field name="agrupacion" string="Agrupado" readonly="true" colspan="2"/>
+            </group>
+            <group>
+                <field name="imputacion_id" readonly="true" colspan="2"/>
+            </group>
         </group>
     </sheet>
     <div class="oe_chatter">

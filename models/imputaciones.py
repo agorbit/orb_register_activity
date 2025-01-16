@@ -46,7 +46,19 @@ class Imputaciones (models.Model):
                 where = "'&'," + where + "('project_id','=','" + str(self.project_id.id) + ")"                
         
         where = "[" + where + "]"
-
+        
+    #elimnar
+    @api.model_create_multi
+    def unlink(self):
+        for record in self:
+            if self.imputacion_id.id != False:
+               raise ValidationError("No se puede elimina porque es una agrupación") 
+            if self.agrupacion == True:
+                resultado = self.env['imputaciones'].search([('imputacion_id','=',self.id)])
+                for record in resultado:
+                    imputacion_id = none
+            imputaciones = super(self).unlink()
+            return imputaciones
 
     #Botones
 
@@ -166,26 +178,70 @@ class Imputaciones (models.Model):
                     raise ValidationError("Ya esta imputado")
             
     def unir_imputaciones(self):
+        
+        CamposUnicos = self.mapped('partner_id')
+        if len(set(CamposUnicos)) == 1:        
+            pass
+        else:
+            raise ValidationError("incorrecto")
+
+        CamposUnicos = self.mapped('case_id')
+        if len(set(CamposUnicos)) == 1:        
+            pass
+        else:
+            raise ValidationError("incorrecto")
+
+        CamposUnicos = self.mapped('project_id')
+        if len(set(CamposUnicos)) == 1:        
+            pass
+        else:
+            raise ValidationError("incorrecto")
+
+        CamposUnicos = self.mapped('task_id')
+        if len(set(CamposUnicos)) == 1:        
+            pass
+        else:
+            raise ValidationError("incorrecto")
+        
+        TiempoRealizado = 0
+        TiempoFacturable = 0
+        TiempoManual = 0
+        Descripcion = ""
+        Resumen = ""
         for record in self: 
             FechaInicio = record.fecha_inicio
             FechaFin = record.fecha_final
             TiempoRealizado = TiempoRealizado + record.tiempo_realizado
             TiempoFacturable = TiempoFacturable + record.tiempo_facturar
-            Descripcion = Descripcion + " " +  record.descripcion
+            TiempoManual = TiempoManual + record.tiempo_manual
+            if str(record.name) == 'False':
+                Resumen = Resumen + ''
+            else:
+                Resumen = Resumen + ' ' + record.name
+            if str(record.descripcion) == 'False':
+                Descripcion = Descripcion + ''
+            else:
+                Descripcion = Descripcion + ' ' + record.descripcion
+            State = record.state
         
         NewCase = self.env['imputaciones'].create(
             {
+                'partner_id':record.partner_id.id,
+                'project_id':record.project_id.id,
+                'case_id': record.case_id.id,
+                'tarea_id': record.tarea_id.id,
                 'fecha_inicio':FechaInicio,
                 'fecha_final':FechaFin,
-                'tiempo_utilizado':TiempoRealizado,
-                'name':'Agrupacion',
+                'tiempo_realizado':TiempoRealizado,
+                'tiempo_facturar':TiempoFacturable,
+                'name':Resumen,
                 'descripcion':Descripcion,
+                'agrupacion': True,
+                'state': State
             })
         agrupacion_nueva = NewCase.id    
         
-        for record in self:
-            self.agrupacion = True
+        for record in self:            
             self.imputacion_id = NewCase.id 
-        
         
     
