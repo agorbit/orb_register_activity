@@ -92,6 +92,9 @@
                 <field name="imputacion_id" readonly="true" colspan="2"/>
             </group>
         </group>
+        <group string="Detalle Agrupación" invisible="agrupacion == False">
+            <field name="agrupacion_lines_ids" nolabel="1" readonly="true" colspan="2"/>            
+        </group>
     </sheet>
     <div class="oe_chatter">
         <field name="message_follower_ids" widget="mail_followers"/>

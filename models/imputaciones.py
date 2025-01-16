@@ -35,6 +35,7 @@ class Imputaciones (models.Model):
     ],default='0' ,string='Estado')
     account_analytic_line_id = fields.Many2one('account.analytic.line',string="Imputación analítica")
     agrupacion = fields.Boolean('agrupacion',default=False)
+    agrupacion_lines_ids = fields.One2many('imputaciones', 'imputacion_id', string='Lineas agrupacion')
     imputacion_id = fields.Many2one('imputaciones', string='Imputacion')
     where = fields.Char(compute='_compute_where', string='where')
     
@@ -48,17 +49,16 @@ class Imputaciones (models.Model):
         where = "[" + where + "]"
         
     #elimnar
-    @api.model_create_multi
     def unlink(self):
         for record in self:
-            if self.imputacion_id.id != False:
+            if record.imputacion_id.id != False:
                raise ValidationError("No se puede elimina porque es una agrupación") 
-            if self.agrupacion == True:
-                resultado = self.env['imputaciones'].search([('imputacion_id','=',self.id)])
+            if record.agrupacion == True:
+                resultado = self.env['imputaciones'].search([('imputacion_id','=',record.id)])
                 for record in resultado:
-                    imputacion_id = none
-            imputaciones = super(self).unlink()
-            return imputaciones
+                    imputacion_id = ''
+        imputaciones = super(Imputaciones,self).unlink()
+        return imputaciones
 
     #Botones
 
@@ -67,17 +67,23 @@ class Imputaciones (models.Model):
         self.fecha_inicio = datetime.today()
 
     def finalizar(self):
-        self.state = '2'        
-        self.fecha_final = datetime.today()
-        FechaInicial = self.fecha_inicio
-        FechaFinal = self.fecha_final
-        diferencia = FechaFinal - FechaInicial
-        self.tiempo = diferencia.total_seconds()/3600
-        self.tiempo_realizado = self.tiempo * self.factor
-        if self.tiempo_manual != 0:
-            self.tiempo_facturar = self.tiempo_manual            
+        if self.case_id.id == False and self.project_id.id == False:
+            raise ValidationError("Caso o proyecto deben estar rellenados")
         else:
-            self.tiempo_facturar = self.tiempo_realizado
+            if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
+                raise ValidationError("Si es una imputación de proyecto, proyecto y tarea debes estar rellenados")
+            else:                
+                self.state = '2'        
+                self.fecha_final = datetime.today()
+                FechaInicial = self.fecha_inicio
+                FechaFinal = self.fecha_final
+                diferencia = FechaFinal - FechaInicial
+                self.tiempo = diferencia.total_seconds()/3600
+                self.tiempo_realizado = self.tiempo * self.factor
+                if self.tiempo_manual != 0:
+                    self.tiempo_facturar = self.tiempo_manual            
+                else:
+                    self.tiempo_facturar = self.tiempo_realizado
 
     def imputado(self):
         if self.case_id.id == False and self.project_id.id == False:
@@ -136,7 +142,13 @@ class Imputaciones (models.Model):
             else:
                 self.case_id = ""
         
-        
+    @api.onchange('case_id')
+    def _on_change_case_id(self):
+        raise ValidationError (self.case_id.id)
+        if self.case_id.id != False:
+            self.partner_id = case_id.partner_id
+            if case_id.team_id.use_helpdesk_timesheet == True:                        
+                self.project_id = case_id.team_id.project_id    
     
     #Crear registro en ticket
     
@@ -183,25 +195,33 @@ class Imputaciones (models.Model):
         if len(set(CamposUnicos)) == 1:        
             pass
         else:
-            raise ValidationError("incorrecto")
+            raise ValidationError("Distintos clientes")
 
         CamposUnicos = self.mapped('case_id')
-        if len(set(CamposUnicos)) == 1:        
+        if len(set(CamposUnicos)) == 1 or len(set(CamposUnicos)) == 0:       
             pass
         else:
-            raise ValidationError("incorrecto")
+            raise ValidationError("Distintos tickets")
 
         CamposUnicos = self.mapped('project_id')
         if len(set(CamposUnicos)) == 1:        
             pass
         else:
-            raise ValidationError("incorrecto")
+            raise ValidationError("Distintos proyectos")
 
-        CamposUnicos = self.mapped('task_id')
+        
+        CamposUnicos = self.mapped('task_id')        
+        if len(set(CamposUnicos)) == 1 or len(set(CamposUnicos)) == 0:        
+            pass
+        else:
+            raise ValidationError("Distintas tareas")
+
+        CamposUnicos = self.mapped('fecha_final')
+        CamposUnicos = [dt.date() for dt in CamposUnicos]        
         if len(set(CamposUnicos)) == 1:        
             pass
         else:
-            raise ValidationError("incorrecto")
+            raise ValidationError("Distintas fechas")
         
         TiempoRealizado = 0
         TiempoFacturable = 0
@@ -223,13 +243,14 @@ class Imputaciones (models.Model):
             else:
                 Descripcion = Descripcion + ' ' + record.descripcion
             State = record.state
+            Tarea = record.task_id.id
         
         NewCase = self.env['imputaciones'].create(
             {
                 'partner_id':record.partner_id.id,
                 'project_id':record.project_id.id,
                 'case_id': record.case_id.id,
-                'tarea_id': record.tarea_id.id,
+                'task_id': Tarea,
                 'fecha_inicio':FechaInicio,
                 'fecha_final':FechaFin,
                 'tiempo_realizado':TiempoRealizado,
@@ -239,9 +260,10 @@ class Imputaciones (models.Model):
                 'agrupacion': True,
                 'state': State
             })
-        agrupacion_nueva = NewCase.id    
+        agrupacion_nueva = NewCase.id     
         
         for record in self:            
-            self.imputacion_id = NewCase.id 
+            self.imputacion_id = NewCase.id
+            self.state = '3'
         
     
