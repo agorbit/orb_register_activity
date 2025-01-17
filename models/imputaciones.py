@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api
 from datetime import datetime
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 
 class Imputaciones (models.Model):
@@ -110,8 +110,9 @@ class Imputaciones (models.Model):
                 self.state = '3'
     
     def recalcular(self):
-        if self.state != '0':
-            self.fecha_final = datetime.today()
+        if self.state in ('1','2'):
+            if str(self.fecha_final) == "" :
+                self.fecha_final = datetime.today()
             FechaInicial = self.fecha_inicio
             FechaFinal = self.fecha_final
             if str(FechaInicial) != "False" and str(FechaFinal) != "False":
@@ -134,6 +135,9 @@ class Imputaciones (models.Model):
     def _on_change_tiempo_manual(self):        
         self.recalcular() 
 
+    @api.onchange('fecha_final')
+    def _on_change_fecha_final(self):        
+        self.recalcular() 
 
     def check_int(self,s):
         try: 
