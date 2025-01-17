@@ -12,7 +12,9 @@
         <field name="task_id" />
         <field name="fecha_inicio" string ="Fecha Inicio"/>
         <field name="fecha_final" string ="Fecha Fin"/>
-        <field name="tiempo_facturar" string="Tiempo Facturar"/>       
+        <field name="tiempo_facturar" string="Tiempo Facturar"/>
+        <field name="agrupacion" string="Agrupación"/>
+        <field name="imputacion_id" string="Imputacion Agr."/>      
         <field name="state" />
       </tree>
     </field>
