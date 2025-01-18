@@ -7,7 +7,7 @@
       <tree string="Imputaciones">
         <field name="name" string="Resumen" />        
         <field name="partner_id" string="Cliente"/>
-        <field name="contact_id" string="Contacto"/>
+        <field name="partner_parent_id" string="Cliente Padre"/>
         <field name="case_id"/>
         <field name="project_id" />
         <field name="task_id" />
@@ -38,7 +38,8 @@
         <group string="Datos Principales">
             <group>
                 <field name="ticket" string="Ticket" readonly="state in ('2','3')"/> 
-                <field name="partner_id" string="Partner" required="True" readonly="state in ('2','3')" domain="[('is_company','=','true')]"/> 
+                <field name="partner_id" string="Partner" required="True" readonly="state in ('2','3')" domain="[('is_individual','=','true')]"/> 
+                <field name="partner_parent_id" string="Cliente Padre" readonly="1"/> 
             </group>
             <group>
                 <field name="project_id" domain="['|','|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting'),('partner_id','=',False)]" readonly="state in ('2','3')" />
