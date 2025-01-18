@@ -160,12 +160,9 @@ class Imputaciones (models.Model):
                 casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])
                 for caso in casos:
                     self.case_id = caso.id
+                    self.partner_id = caso.partner_id.id
                     if caso.partner_id.parent_id.partner_id.id == True:
-                        self.partner_id = caso.partner_id.parent_id.partner_id.id
-                        self.partner_parent_id = self.partner_id.parent_id.id
-                    else:
-                        self.partner_id = caso.partner_id
-                        self.partner_parent_id = self.partner_id.parent_id.id
+                        self.partner_parent_id = caso.partner_id.parent_id.partner_id.id  
                     if caso.team_id.use_helpdesk_timesheet == True:                        
                         self.project_id = caso.team_id.project_id
             else:
@@ -174,12 +171,9 @@ class Imputaciones (models.Model):
     @api.onchange('case_id')
     def _on_change_case_id(self):        
         if self.case_id.id != False:
+            self.partner_id = self.case_id.partner_id.id
             if self.partner_id.parent_id.id == True:
-                self.partner_id = self.partner_id.parent_id.id
-                self.partner_parent_id = self.partner_id.parent_id.id
-            else:
-                self.partner_id = self.partner_id
-                self.partner_parent_id = self.partner_id.parent_id.id            
+                self.partner_parent_id = self.partner_id.parent_id.id 
             if self.case_id.team_id.use_helpdesk_timesheet == True:                        
                 self.project_id = self.case_id.team_id.project_id     
     

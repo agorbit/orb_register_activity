@@ -38,7 +38,7 @@
         <group string="Datos Principales">
             <group>
                 <field name="ticket" string="Ticket" readonly="state in ('2','3')"/> 
-                <field name="partner_id" string="Partner" required="True" readonly="state in ('2','3')" domain="[('is_individual','=','true')]"/> 
+                <field name="partner_id" string="Partner" required="True" readonly="state in ('2','3')" domain="[('is_company','=','false')]"/> 
                 <field name="partner_parent_id" string="Cliente Padre" readonly="1"/> 
             </group>
             <group>
@@ -54,7 +54,7 @@
         </group>
         <group string="Caso / Proyecto">
             <group>
-                <field name="case_id" domain="['|',('partner_id','=',partner_id),('partner_id.parent_id','=',partner_id)]" readonly="state in ('2','3')"/>
+                <field name="case_id" domain="['|',('partner_id','=',partner_id),('partner_id.parent_id','=',partner_parent_id)]" readonly="state in ('2','3')"/>
             </group>
             <group>
                 <field name="task_id" domain="[('project_id','=',project_id)]" readonly="state in ('2','3')"/>
