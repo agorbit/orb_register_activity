@@ -5,7 +5,7 @@ from datetime import datetime,date
 
 
 class Actividades (models.Model):
-    _name = 'actividades's
+    _name = 'actividades'
     _description='Actividades'
     _inherit = 'mail.thread'
 
