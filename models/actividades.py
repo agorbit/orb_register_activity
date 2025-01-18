@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from datetime import datetime
+from datetime import datetime,date
 
 
 class Actividades (models.Model):
-    _name = 'actividades'
+    _name = 'actividades's
     _description='Actividades'
     _inherit = 'mail.thread'
 

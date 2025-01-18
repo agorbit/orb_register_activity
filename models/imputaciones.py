@@ -53,7 +53,7 @@ class Imputaciones (models.Model):
     def unlink(self):
         for record in self:
             if record.imputacion_id.id != False:
-               raise ValidationError("No se puede elimina porque es una agrupación") 
+               raise ValidationError("No se puede elimina porque pertenee a una agrupación") 
             if record.agrupacion == True:
                 resultado = self.env['imputaciones'].search([('imputacion_id','=',record.id)])
                 for record in resultado:                    
@@ -62,25 +62,12 @@ class Imputaciones (models.Model):
         imputaciones = super(Imputaciones,self).unlink()
         return imputaciones
     
-    # def write(self,vals):
-    #     if self.state in ('2','3'):
-    #         super(Imputaciones, self).write(vals)
-    #         models_data = self.pool.get('ir.model.data')
-    #         imputaciones_tree = models_data._get_id(cr, uid, 'sale', 'imputaciones_view_tree')
-    #         return {            
-    #             'name': 'Imputaciones',
-    #             'view_type': 'tree',
-    #             "view_mode": 'tree,form',
-    #             'res_model': 'imputaciones',
-    #             'type': 'ir.actions.act_window',
-    #             'search_view_id': imputaciones_tree,
-    #         }
-        
-    #Botones
-
     def enprogreso(self):
-        self.state = '1'
-        self.fecha_inicio = datetime.today()
+        if self.imputacion_id.id != False:
+            raise ValidationError("No se puede modificar porque pertenee a una agrupación") 
+        else:
+            self.state = '1'
+            self.fecha_inicio = datetime.today()
 
     def finalizar(self):
         if self.case_id.id == False and self.project_id.id == False:
@@ -89,17 +76,18 @@ class Imputaciones (models.Model):
             if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
                 raise ValidationError("Si es una imputación de proyecto, proyecto y tarea debes estar rellenados")
             else:                
-                self.state = '2'        
-                self.fecha_final = datetime.today()
-                FechaInicial = self.fecha_inicio
-                FechaFinal = self.fecha_final
-                diferencia = FechaFinal - FechaInicial
-                self.tiempo = diferencia.total_seconds()/3600
-                self.tiempo_realizado = self.tiempo * self.factor
-                if self.tiempo_manual != 0:
-                    self.tiempo_facturar = self.tiempo_manual            
-                else:
-                    self.tiempo_facturar = self.tiempo_realizado
+                self.state = '2'
+                if self.agrupacion == False: #A los agrupados no recalcula
+                    self.fecha_final = datetime.today()
+                    FechaInicial = self.fecha_inicio
+                    FechaFinal = self.fecha_final
+                    diferencia = FechaFinal - FechaInicial
+                    self.tiempo = diferencia.total_seconds()/3600
+                    self.tiempo_realizado = self.tiempo * self.factor
+                    if self.tiempo_manual != 0:
+                        self.tiempo_facturar = self.tiempo_manual            
+                    else:
+                        self.tiempo_facturar = self.tiempo_realizado
 
     def imputado(self):
         if self.case_id.id == False and self.project_id.id == False:
@@ -142,7 +130,10 @@ class Imputaciones (models.Model):
         
     @api.onchange('partner_id')
     def _on_change_partner(self):        
-        self.partner_parent_id = self.partner_id.parent_id.id
+        if self.partner_id.parent_id.id != False:
+            self.partner_parent_id = self.partner_id.parent_id.id
+        else:
+            self.partner_parent_id = self.partner_id.id
 
     def check_int(self,s):
         try: 
@@ -161,21 +152,23 @@ class Imputaciones (models.Model):
                 for caso in casos:
                     self.case_id = caso.id
                     self.partner_id = caso.partner_id.id
-                    if caso.partner_id.parent_id.partner_id.id == True:
-                        self.partner_parent_id = caso.partner_id.parent_id.partner_id.id  
+                    if caso.partner_id.parent_id.id != False:
+                        self.partner_parent_id = caso.partner_id.parent_id.id  
                     if caso.team_id.use_helpdesk_timesheet == True:                        
                         self.project_id = caso.team_id.project_id
             else:
                 self.case_id = ""
         
     @api.onchange('case_id')
-    def _on_change_case_id(self):        
+    def _on_change_case_id(self):  
         if self.case_id.id != False:
-            self.partner_id = self.case_id.partner_id.id
-            if self.partner_id.parent_id.id == True:
+            self.partner_id = self.case_id.partner_id.id 
+            if self.partner_id.parent_id.id != False:
                 self.partner_parent_id = self.partner_id.parent_id.id 
+            else:                
+                self.partner_parent_id = self.case_id.partner_id.id                
             if self.case_id.team_id.use_helpdesk_timesheet == True:                        
-                self.project_id = self.case_id.team_id.project_id     
+                self.project_id = self.case_id.team_id.project_id.id 
     
     #Crear registro en ticket
     
@@ -277,6 +270,7 @@ class Imputaciones (models.Model):
         NewCase = self.env['imputaciones'].create(
             {
                 'partner_id':record.partner_id.id,
+                'partner_parent_id':record.partner_parent_id.id,
                 'project_id':record.project_id.id,
                 'case_id': record.case_id.id,
                 'task_id': Tarea,

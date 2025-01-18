@@ -13,7 +13,7 @@
     'website': "",
 
     'category': 'Uncategorized',
-    'version': '0.9',
+    'version': '0.10',
 
     # any module necessary for this one to work correctly
     'depends': ['base','helpdesk','project','timesheet_grid'],

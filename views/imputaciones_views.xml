@@ -13,7 +13,7 @@
         <field name="task_id" />
         <field name="fecha_inicio" string ="Fecha Inicio"/>
         <field name="fecha_final" string ="Fecha Fin"/>
-        <field name="tiempo_facturar" string="Tiempo Facturar"/>
+        <field name="tiempo_facturar" widget="timesheet_uom" string="Tiempo Facturar"/>
         <field name="agrupacion" string="Agrupación"/>
         <field name="imputacion_id" string="Imputacion Agr."/>      
         <field name="state" />
@@ -38,8 +38,8 @@
         <group string="Datos Principales">
             <group>
                 <field name="ticket" string="Ticket" readonly="state in ('2','3')"/> 
-                <field name="partner_id" string="Partner" required="True" readonly="state in ('2','3')" domain="[('is_company','=','false')]"/> 
-                <field name="partner_parent_id" string="Cliente Padre" readonly="1"/> 
+                <field name="partner_id" string="Cliente" required="True" readonly="state in ('2','3')" domain="[('is_company','=',False)]"/>
+                <field name="partner_parent_id" string="Cliente Padre"  />
             </group>
             <group>
                 <field name="project_id" domain="['|','|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting'),('partner_id','=',False)]" readonly="state in ('2','3')" />
@@ -54,7 +54,7 @@
         </group>
         <group string="Caso / Proyecto">
             <group>
-                <field name="case_id" domain="['|',('partner_id','=',partner_id),('partner_id.parent_id','=',partner_parent_id)]" readonly="state in ('2','3')"/>
+                <field name="case_id" domain="['|',('partner_id','=',partner_id),('partner_id','=',partner_parent_id),('stage_id','!=','Solved')]" readonly="state in ('2','3')"/>
             </group>
             <group>
                 <field name="task_id" domain="[('project_id','=',project_id)]" readonly="state in ('2','3')"/>
