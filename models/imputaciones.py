@@ -16,6 +16,7 @@ class Imputaciones (models.Model):
     user_id = fields.Many2one('res.users', string='Assigned to', store=True, readonly=False,default=lambda self: self.env.user and self.env.user.id or False )
     ticket = fields.Char('ticket')
     partner_id = fields.Many2one('res.partner', string='partner')
+    contact_id = fields.Many2one('res.partner', string='partner')
     case_id = fields.Many2one('helpdesk.ticket', string='Caso')
     project_id = fields.Many2one('project.project', string='Proyecto')
     task_id = fields.Many2one('project.task', string='Tarea')
@@ -155,7 +156,10 @@ class Imputaciones (models.Model):
                 casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])
                 for caso in casos:
                     self.case_id = caso.id
-                    self.partner_id = caso.partner_id
+                    if caso.partner_id.parent_id.partner_id.id == True:
+                        self.partner_id = caso.partner_id.parent_id.partner_id.id
+                    else:
+                        self.partner_id = caso.partner_id
                     if caso.team_id.use_helpdesk_timesheet == True:                        
                         self.project_id = caso.team_id.project_id
             else:
@@ -164,7 +168,11 @@ class Imputaciones (models.Model):
     @api.onchange('case_id')
     def _on_change_case_id(self):        
         if self.case_id.id != False:
-            self.partner_id = self.case_id.partner_id.id
+            if self.partner_id.parent_id.id == True:
+                self.partner_id = self.partner_id.parent_id.id
+            else:
+                self.partner_id = self.partner_id
+            #self.partner_id = self.case_id.partner_id.id
             if self.case_id.team_id.use_helpdesk_timesheet == True:                        
                 self.project_id = self.case_id.team_id.project_id     
     

@@ -16,7 +16,7 @@
     'version': '0.9',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','helpdesk','project'],
+    'depends': ['base','helpdesk','project','timesheet_grid'],
 
     # always loaded
     'data': [
