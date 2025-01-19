@@ -50,7 +50,7 @@
             </group>
         </group>
         <group string="Descripción">
-            <field name="descripcion" nolabel="1" colspan="2" readonly="state in ('2','3')"/>
+            <field name="descripcion" required="True" nolabel="1" colspan="2" readonly="state in ('2','3')"/>
         </group>
         <group string="Caso / Proyecto">
             <group>

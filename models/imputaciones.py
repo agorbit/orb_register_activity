@@ -156,6 +156,8 @@ class Imputaciones (models.Model):
                         self.partner_parent_id = caso.partner_id.parent_id.id  
                     if caso.team_id.use_helpdesk_timesheet == True:                        
                         self.project_id = caso.team_id.project_id
+                    else:
+                        raise ValidationError("No esta activado timesheet en el equipo de ticket")
             else:
                 self.case_id = ""
         

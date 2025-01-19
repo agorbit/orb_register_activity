@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 from datetime import datetime,date
+from odoo.exceptions import ValidationError,UserError
 
 
 class Actividades (models.Model):
@@ -14,6 +15,7 @@ class Actividades (models.Model):
     user_id = fields.Many2one('res.users', string='Assigned to', store=True, readonly=False,default=lambda self: self.env.user and self.env.user.id or False )
     ticket = fields.Char('ticket')
     partner_id = fields.Many2one('res.partner', string='partner')
+    partner_parent_id = fields.Many2one('res.partner', string='Cliente Padre')
     case_id = fields.Many2one('helpdesk.ticket', string='Caso')
     project_id = fields.Many2one('project.project', string='Proyecto')
     task_id = fields.Many2one('project.task', string='Tarea')
@@ -61,11 +63,13 @@ class Actividades (models.Model):
         
     
     #Cambios en campos
-
-    @api.onchange('factor','tiempo_manual')
-    def _on_change_factor(self):        
-        self.recalcular() 
-
+    
+    @api.onchange('partner_id')
+    def _on_change_partner(self):        
+        if self.partner_id.parent_id.id != False:
+            self.partner_parent_id = self.partner_id.parent_id.id
+        else:
+            self.partner_parent_id = self.partner_id.id
 
     def check_int(self,s):
         try: 
