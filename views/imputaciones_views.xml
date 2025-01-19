@@ -79,7 +79,7 @@
                 <field name="tiempo_realizado" string="Tiempo Realizado" readonly="True" widget="timesheet_uom"/>
             </group>
             <group>
-                <field name="tiempo_manual" string="Tiempo Manual" widget="timesheet_uom" readonly="state in ('2','3')"/>
+                <field name="tiempo_manual" string="Tiempo Manual" widget="timesheet_uom" />
             </group>
             <group>
                 <field name="tiempo_facturar" string="Tiempo Facturar" readonly="True" widget="timesheet_uom"/>

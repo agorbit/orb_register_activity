@@ -43,9 +43,17 @@ class Actividades (models.Model):
 
     
     #Botones
+    def borrador(self):
+        self.state = '0' 
 
     def enprogreso(self):
-        self.state = '1'
+        if self.case_id.id == False and self.project_id.id == False:
+            raise ValidationError("Caso o proyecto deben estar rellenados")
+        else:
+            if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
+                raise ValidationError("Si es una imputación de proyecto, proyecto y tarea debes estar rellenados")
+            else:                
+                self.state = '1' 
         
 
     def finalizar(self):

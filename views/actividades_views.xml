@@ -5,15 +5,14 @@
         <field name="model">actividades</field>
         <field name="arch" type="xml">
             <tree string="Actividades" decoration-info="dias_vencido &lt; 0.00" decoration-danger="dias_vencido &gt; 0.00" default_order="fecha_vencimiento asc" >
-                <field name="name" string="Resumen" required="True"/>
-                <field name="ticket" string="Ticket"/>
-                <field name="partner_id" string="Partner" required="True"/>
+                <field name="name" string="Resumen" />
+                <field name="partner_id" string="Partner" />
                 <field name="case_id"/>
                 <field name="project_id" />
                 <field name="task_id" />
                 <field name="cliente" string="Tarea del cliente"/>                
                 <field name="fecha_vencimiento" string="Fecha Vencimiento" />
-                <field name="dias_vencido" invisible="1" />
+                <field name="dias_vencido" />
                 <field name="state" />
             </tree>
         </field>
@@ -26,6 +25,7 @@
             <form string="Actividades Pendientes">
                 <header>
                     <field name="state" widget="statusbar"/>
+                    <button name="borrador" string="Borrador" type="object" class="oe_stat_button" invisible="state in ('1')"/> 
                     <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
                     <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','4')"/>
                     <button name="externo" string="Externo" type="object" class="oe_stat_button" invisible="state in ('0','2','4')"/>                    
