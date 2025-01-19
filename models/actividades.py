@@ -32,11 +32,14 @@ class Actividades (models.Model):
     dias_vencido = fields.Float(compute='_compute_dias_vencido', string='Días vencido', store="True")
     
     @api.depends('fecha_vencimiento')
-    def _compute_dias_vencido(self):
-        FechaAhora = date.today()
-        FechaFinal = self.fecha_vencimiento        
-        diferencia = FechaAhora -  FechaFinal
-        self.dias_vencido = diferencia.total_seconds()/86400
+    def _compute_dias_vencido(self):        
+        if self.fecha_vencimiento != False:
+            FechaAhora = date.today()
+            FechaFinal = self.fecha_vencimiento        
+            diferencia = FechaAhora -  FechaFinal
+            self.dias_vencido = diferencia.total_seconds()/86400
+        else:
+            raise UserError("No se ha establecido fecha de vencimiento")
 
     
     #Botones
@@ -46,9 +49,14 @@ class Actividades (models.Model):
         
 
     def finalizar(self):
-        self.state = '3'       
-        
-
+        if self.case_id.id == False and self.project_id.id == False:
+            raise ValidationError("Caso o proyecto deben estar rellenados")
+        else:
+            if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
+                raise ValidationError("Si es una imputación de proyecto, proyecto y tarea debes estar rellenados")
+            else:                
+                self.state = '3' 
+                
     def imputado(self):
         if self.case_id.id == False and self.project_id.id == False:
             raise ValidationError("Caso o proyecto deben estar rellenados")
@@ -85,10 +93,15 @@ class Actividades (models.Model):
             resultado = self.env['helpdesk.ticket'].search_count([('id','=',int(self.ticket))])       
             if resultado > 0:
                 casos = self.env['helpdesk.ticket'].search([('id','=',int(self.ticket))])
-                for caso in casos:
+                for caso in casos: 
                     self.case_id = caso.id
-                    self.partner_id = caso.partner_id
-                    self.project_id = caso.team_id.project_id
+                    self.partner_id = caso.partner_id.id
+                    if caso.partner_id.parent_id.id != False:
+                        self.partner_parent_id = caso.partner_id.parent_id.id  
+                    if caso.team_id.use_helpdesk_timesheet == True:                        
+                        self.project_id = caso.team_id.project_id
+                    else:
+                        raise UserError("No esta activado timesheet en el equipo de ticket")
             else:
                 self.case_id = ""
         

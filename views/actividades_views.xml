@@ -4,7 +4,7 @@
         <field name="name">actividades.view.tree</field>
         <field name="model">actividades</field>
         <field name="arch" type="xml">
-            <tree string="Actividades" decoration-info="dias_vencido &lt; 0.00" decoration-danger="dias_vencido &gt; 0.00" >
+            <tree string="Actividades" decoration-info="dias_vencido &lt; 0.00" decoration-danger="dias_vencido &gt; 0.00" default_order="fecha_vencimiento asc" >
                 <field name="name" string="Resumen" required="True"/>
                 <field name="ticket" string="Ticket"/>
                 <field name="partner_id" string="Partner" required="True"/>
@@ -13,7 +13,7 @@
                 <field name="task_id" />
                 <field name="cliente" string="Tarea del cliente"/>                
                 <field name="fecha_vencimiento" string="Fecha Vencimiento" />
-                <field name="dias_vencido" />
+                <field name="dias_vencido" invisible="1" />
                 <field name="state" />
             </tree>
         </field>
@@ -33,23 +33,23 @@
                 <sheet>
                     <group string="Datos Principales">
                         <group>
-                            <field name="ticket" string="Ticket"/> 
+                            <field name="ticket" string="Ticket" readonly="state in ('2','3')"/> 
                             <field name="partner_id" string="Cliente" required="True" readonly="state in ('2','3')" domain="[('is_company','=',False)]"/>
                             <field name="partner_parent_id" string="Cliente Padre" invisible="1" />
                         </group>
                         <group>
-                            <field name="project_id" domain="['|','|',('partner_id','=',partner_id),('partner_id','=','Orbit Consulting'),('partner_id','=',False)]" readonly="state in ('2','3')" />
-                            <field name="user_id" string="Usuario"/>  
+                            <field name="project_id" domain="['|','|','|',('partner_id','=',partner_parent_id),('partner_id','=',partner_id),('partner_id','=','Orbit Consulting'),('partner_id','=',False)]" readonly="state in ('2','3')" />
+                            <field name="user_id" string="Usuario" readonly="state in ('2','3')"/>  
                         </group>
                         <group string="Resumen">
-                            <field name="name" required="True" nolabel="1" colspan="4"/>
+                            <field name="name" required="True" nolabel="1" colspan="4" readonly="state in ('2','3')"/>
                         </group>
                         <group>
-                            <field name="cliente" string="Tarea del cliente"/>
+                            <field name="cliente" string="Tarea del cliente" readonly="state in ('2','3')"/>
                         </group>
                     </group>
                     <group string="Descripción">
-                        <field name="descripcion" nolabel="1" colspan="2"/>
+                        <field name="descripcion" nolabel="1" colspan="2" readonly="state in ('2','3')"/>
                     </group>
                     <group string="Caso / Proyecto">
                         <group>
@@ -59,7 +59,7 @@
                             <field name="task_id" domain="[('project_id','=',project_id)]" readonly="state in ('2','3')"/>
                         </group>
                         <group>
-                            <field name="fecha_vencimiento" string="Fecha Vencimiento"/>
+                            <field name="fecha_vencimiento" string="Fecha Vencimiento" readonly="state in ('2','3')"/>
                         </group>
                     </group>
                 </sheet>
@@ -69,6 +69,31 @@
                 </div>
             </form>
         </field>
+    </record>
+
+    <record id="imputaciones_view_search" model="ir.ui.view">
+        <field name="name">actividades.search.view</field>
+        <field name="model">actividades</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="case_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Estado" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Proyecto" name="project_id" context="{'group_by': 'project_id'}"/>
+                        <filter string="Tarea" name="task_id" context="{'group_by': 'task_id'}"/>
+                        <filter string="Caso" name="case_id" context="{'group_by': 'case_id'}"/>
+                        <filter string="Vencimiento" name="fecha_vencimiento" context="{'group_by': 'fecha_vencimiento:day'}"/>
+                    </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_actividades_todas" model="ir.actions.act_window">
+        <field name="name">Actividades</field>
+        <field name="res_model">actividades</field> 
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="actividades_view_tree"/>        
     </record>
 
      <record id="action_actividades_pendientes" model="ir.actions.act_window">
@@ -85,6 +110,14 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="actividades_view_tree"/>
         <field name="domain">[('state','=','3')]</field>
+    </record>
+
+    <record id="action_actividades_externo" model="ir.actions.act_window">
+        <field name="name">Actividades Externo</field>
+        <field name="res_model">actividades</field> 
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="actividades_view_tree"/>
+        <field name="domain">[('state','=','4')]</field>
     </record>
 
     </data>

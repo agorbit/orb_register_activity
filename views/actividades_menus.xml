@@ -2,6 +2,13 @@
 <odoo>
 
     <menuitem
+        id="actividades_menu_todas"
+        name="Actividades"
+        action="action_actividades_todas"
+        parent="actividades_menu"    
+        sequence="60"/>
+
+    <menuitem
         id="actividades_menu"
         name="Actividades"
         parent="imputaciones_menu_root"
