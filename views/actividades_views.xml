@@ -71,20 +71,21 @@
         </field>
     </record>
 
-    <record id="imputaciones_view_search" model="ir.ui.view">
+    <record id="actividades_view_search" model="ir.ui.view">
         <field name="name">actividades.search.view</field>
         <field name="model">actividades</field>
         <field name="arch" type="xml">
             <search>
                 <field name="partner_id"/>
                 <field name="case_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Estado" name="state" context="{'group_by': 'state'}"/>
-                        <filter string="Proyecto" name="project_id" context="{'group_by': 'project_id'}"/>
-                        <filter string="Tarea" name="task_id" context="{'group_by': 'task_id'}"/>
-                        <filter string="Caso" name="case_id" context="{'group_by': 'case_id'}"/>
-                        <filter string="Vencimiento" name="fecha_vencimiento" context="{'group_by': 'fecha_vencimiento:day'}"/>
-                    </group>
+                <filter domain="[('cliente','=',True)]" name="cliente" string="Tarea Cliente"/>
+                <group expand="0" string="Group By">
+                    <filter string="Estado" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Proyecto" name="project_id" context="{'group_by': 'project_id'}"/>
+                    <filter string="Tarea" name="task_id" context="{'group_by': 'task_id'}"/>
+                    <filter string="Caso" name="case_id" context="{'group_by': 'case_id'}"/>
+                    <filter string="Vencimiento" name="fecha_vencimiento" context="{'group_by': 'fecha_vencimiento:day'}"/>
+                </group>
             </search>
         </field>
     </record>

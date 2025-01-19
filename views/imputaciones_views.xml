@@ -140,7 +140,7 @@
 <record id="action_imputaciones_imputacion_abierta" model="ir.actions.act_window">
     <field name="name">Imputaciones abiertas</field>
     <field name="res_model">imputaciones</field>    
-    <field name="view_mode">tree,form,pivot</field>
+    <field name="view_mode">tree,form,pivot,search</field>
     <field name="view_id" ref="imputaciones_view_tree"/>
     <field name="domain">['|',('state','=','0'),('state','=','1')]</field>
 </record>
