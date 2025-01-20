@@ -40,6 +40,7 @@ class Imputaciones (models.Model):
     imputacion_id = fields.Many2one('imputaciones', string='Imputacion')
     where = fields.Char(compute='_compute_where', string='where')
     
+    
     @api.depends('partner_id','project_id')
     def _compute_where(self):
         if self.partner_id.id != False:
@@ -63,7 +64,6 @@ class Imputaciones (models.Model):
         return imputaciones
     
     def enprogreso(self):
-       def enprogreso(self):
         if self.imputacion_id.id != False:
             raise ValidationError("No se puede modificar porque pertenee a una agrupación") 
         else:
