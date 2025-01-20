@@ -25,7 +25,7 @@
             <form string="Actividades Pendientes">
                 <header>
                     <field name="state" widget="statusbar"/>
-                    <button name="borrador" string="Borrador" type="object" class="oe_stat_button" invisible="state in ('1')"/> 
+                    <button name="borrador" string="Borrador" type="object" class="oe_stat_button" invisible="state in ('0')"/> 
                     <button name="enprogreso" string="En Progreso" type="object" class="oe_stat_button" invisible="state in ('1','2')"/> 
                     <button name="finalizar" string="Finalizar" type="object" class="oe_stat_button" invisible="state in ('0','4')"/>
                     <button name="externo" string="Externo" type="object" class="oe_stat_button" invisible="state in ('0','2','4')"/>                    

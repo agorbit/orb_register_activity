@@ -63,11 +63,18 @@ class Imputaciones (models.Model):
         return imputaciones
     
     def enprogreso(self):
+       def enprogreso(self):
         if self.imputacion_id.id != False:
             raise ValidationError("No se puede modificar porque pertenee a una agrupación") 
         else:
-            self.state = '1'
-            self.fecha_inicio = datetime.today()
+            if self.case_id.id == False and self.project_id.id == False:
+                raise ValidationError("Caso o proyecto deben estar rellenados")
+            else:
+                if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
+                    raise ValidationError("Si es una imputación de proyecto. El proyecto y la tarea deben estar rellenados")
+                else:
+                    self.state = '1'
+                    self.fecha_inicio = datetime.today()
 
     def finalizar(self):
         if self.case_id.id == False and self.project_id.id == False:
@@ -254,10 +261,8 @@ class Imputaciones (models.Model):
         Resumen = ""
         for record in self: 
             FechaInicio = record.fecha_inicio
-            FechaFin = record.fecha_final
-            TiempoRealizado = TiempoRealizado + record.tiempo_realizado
-            TiempoFacturable = TiempoFacturable + record.tiempo_facturar
-            TiempoManual = TiempoManual + record.tiempo_manual
+            FechaFin = record.fecha_final            
+            TiempoManual = TiempoManual + record.tiempo_facturar
             if str(record.name) == 'False':
                 Resumen = Resumen + ''
             else:
@@ -278,8 +283,8 @@ class Imputaciones (models.Model):
                 'task_id': Tarea,
                 'fecha_inicio':FechaInicio,
                 'fecha_final':FechaFin,
-                'tiempo_realizado':TiempoRealizado,
-                'tiempo_facturar':TiempoFacturable,
+                'tiempo_manual': TiempoManual,                
+                'tiempo_facturar':TiempoManual,
                 'name':Resumen,
                 'descripcion':Descripcion,
                 'agrupacion': True,
