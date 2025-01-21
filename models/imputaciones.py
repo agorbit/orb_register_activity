@@ -41,6 +41,7 @@ class Imputaciones (models.Model):
     where = fields.Char(compute='_compute_where', string='where')
     
     
+    
     @api.depends('partner_id','project_id')
     def _compute_where(self):
         if self.partner_id.id != False:
@@ -67,14 +68,8 @@ class Imputaciones (models.Model):
         if self.imputacion_id.id != False:
             raise ValidationError("No se puede modificar porque pertenee a una agrupación") 
         else:
-            if self.case_id.id == False and self.project_id.id == False:
-                raise ValidationError("Caso o proyecto deben estar rellenados")
-            else:
-                if self.case_id.id == False and self.project_id.id != False and self.task_id.id == False:
-                    raise ValidationError("Si es una imputación de proyecto. El proyecto y la tarea deben estar rellenados")
-                else:
-                    self.state = '1'
-                    self.fecha_inicio = datetime.today()
+            state = '1'
+            self.fecha_inicio = datetime.today()
 
     def finalizar(self):
         if self.case_id.id == False and self.project_id.id == False:
